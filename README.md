@@ -1,342 +1,459 @@
-# MaskOff: Neural-Powered Vision Intelligence
+<div align="center">
 
-A sophisticated, futuristic face mask detection platform built with AI-powered YOLOv5/YOLOv8 object detection. Features real-time webcam streaming, image/video upload analysis, and a luxury-themed interface with professional UX design.
+```
+███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ ███████╗███████╗
+████╗ ████║██╔══██╗██╔════╝██║ ██╔╝██╔═══██╗██╔════╝██╔════╝
+██╔████╔██║███████║███████╗█████╔╝ ██║   ██║█████╗  █████╗  
+██║╚██╔╝██║██╔══██║╚════██║██╔═██╗ ██║   ██║██╔══╝  ██╔══╝  
+██║ ╚═╝ ██║██║  ██║███████║██║  ██╗╚██████╔╝██║     ██║     
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝    
+```
+
+**Real-Time Face Mask Detection & Security Alert System**
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=pytorch&logoColor=white)](https://ultralytics.com)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
+[![License](https://img.shields.io/badge/License-MIT-00D4AA?style=for-the-badge)](LICENSE)
+
+<br/>
+
+> *A dark, luxury HUD-style dashboard that detects mask states in real time — so checkpoints stay smart.*
+
+<br/>
+
+</div>
 
 ---
 
-## 🎯 Project Overview
+## 📖 Table of Contents
 
-**MaskOff** is an intelligent mask detection system designed for security, automation, and compliance purposes. It leverages state-of-the-art computer vision to identify and classify face mask states across images, video streams, and live camera feeds.
-
-### Key Capabilities
-- **Real-time Detection** — Live webcam streaming with frame-by-frame analysis
-- **Image Analysis** — Upload and analyze images with annotated results
-- **Video Processing** — Batch video file analysis with aggregated statistics
-- **Professional UI** — Luxury gold/dark theme with premium animations and effects
-- **Responsive Design** — Works seamlessly across desktop and mobile devices
-- **Legal Compliance** — Privacy Policy, Terms of Service, and detailed team information
+- [Overview](#-overview)
+- [Demo & Screenshots](#-demo--screenshots)
+- [Features](#-features)
+- [Detection Classes](#-detection-classes)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [How It Works](#-how-it-works)
+- [Configuration](#-configuration)
+- [Known Limitations](#-known-limitations)
+- [Future Roadmap](#-future-roadmap)
+- [License](#-license)
 
 ---
 
-## 📚 Tech Stack
+## 😷 Overview
 
-### Frontend
-- **React 18+** — Component-based UI library
-- **React Router** — Client-side routing for multi-page navigation
-- **Vite** — Lightning-fast build tool and dev server
-- **CSS3** — Custom styling with luxury color palette and advanced animations
-- **JavaScript ES6+** — Modern JavaScript features and async handling
+**MaskOff** is a real-time face mask detection system powered by a custom-trained **YOLOv8** model that classifies **4 mask states** from a live webcam stream or uploaded still images.
 
-### Backend
-- **Python 3.8+** — Server-side programming language
-- **FastAPI** — Modern, high-performance REST API framework
-- **PyTorch** — Deep learning framework for model inference
-- **YOLOv5/YOLOv8** — State-of-the-art object detection model
-- **Uvicorn** — ASGI server for async request handling
+Frames are streamed from the React frontend to a FastAPI backend over **WebSocket**, annotated with bounding boxes and confidence labels, and returned for live canvas overlay — all inside a sleek, dark gold HUD dashboard.
 
-### Architecture
-- **Full-Stack Web Application** — Client-server architecture
-- **REST API** — HTTP endpoints for image/video detection
-- **WebSocket Streaming** — Real-time bidirectional communication for live detection
-- **ML Model Inference** — On-device or server-side ML model execution
+```
+[ Webcam / Uploaded Image ]
+         │
+         ▼
+   React Frontend  ──► Canvas frame capture (320×240 JPEG)
+         │
+         ▼
+   WebSocket / REST  ──► FastAPI Backend
+         │
+         ▼
+   YOLOv8 Inference  ──► Bounding Box Annotation
+         │
+         ▼
+   Mask Classification
+         │
+    ┌────┴──────────┐
+    │               │
+ Masked /        Unmasked /
+ Improper        Niqab
+    │               │
+    ▼               ▼
+ ⚡ Audio Alert   👁 Visual Alert Banner
+    │
+    ▼
+ Detection cards · Confidence list · Telemetry strip
+```
+
+---
+
+## 🎬 Demo & Screenshots
+
+> **Two-panel HUD layout** — live annotated feed on the left, telemetry and detection cards on the right.
+
+| Panel | Description |
+|-------|-------------|
+| 📹 **Left** | Annotated webcam feed with bounding boxes · Start / Stop stream control · Alert banner |
+| 📊 **Right** | FPS · Latency · Frame count · Per-class counters · Live detection rows |
+
+---
+
+## ✨ Features
+
+### 🔴 Real-Time Webcam Detection
+- Streams webcam frames to the backend via **WebSocket** at near-native frame rates
+- Each frame is captured from a hidden 320×240 canvas, JPEG-encoded, and sent as base64 JSON
+- Colour-coded bounding boxes overlaid on a transparent display canvas
+- Zero-queue send loop — next frame dispatches immediately upon server response
+
+### 🖼️ Image Upload Mode
+- Upload a still image and receive an annotated JPEG, class counts, and confidence traces
+- Annotated result replaces the preview inline
+- **Download annotated image** button for saving results
+
+### ⚡ Security Alert System
+- Full-width flashing **red alert banner** fires on `masked`, `improper`, or `niqab` detections
+- **Audio beep** generated via Web Audio API — descending sine sweep, max one beep per 1.5 seconds
+- Alert border glow on the camera panel syncs with the banner state
+- Banner lists all active alert labels in real time
+
+### 📊 Live Telemetry Panel
+- FPS counter updated every second from a client-side frame accumulator
+- Latency, total frame count, and total detection count streamed from backend payload
+- Per-class counters (Masked / Unmasked / Improper / Niqab) rebuild on every detection change
+- Individual detection rows show label + confidence %, sorted by most recent inference
+
+### 🎛️ Three-Page Navigation
+- **Home** — hero landing with stats strip, feature grid, and quick-action links
+- **Live** — full webcam detection mode with real-time telemetry
+- **Upload** — single-image inference with annotated output and download
+- **About** — model classes, tech stack, and usage notes
+
+---
+
+## 🏷️ Detection Classes
+
+The model is trained on **4 classes**:
+
+| Category | Class | Alert Type |
+|----------|-------|------------|
+| 😷 Properly Masked | `masked` | 🔊 Audio + Visual banner |
+| 😶 No Mask | `unmasked` | — (counted only) |
+| 🫤 Worn Incorrectly | `improper` | 🔊 Audio + Visual banner |
+| 🧕 Full Face Veil | `niqab` | 👁 Visual banner only |
+
+> **Total: 4 classes** — covering the full spectrum of real-world face covering states at checkpoints
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology | Role |
+|-------|-----------|------|
+| **AI / ML** | `ultralytics` YOLOv8 | Object detection, custom-trained weights (`best.pt`) |
+| **Computer Vision** | `OpenCV (cv2)` | Frame decoding, bounding box annotation, JPEG encoding |
+| **Backend** | `FastAPI` + `uvicorn` | REST endpoint (`/detect/image`) + WebSocket stream (`/ws/stream`) |
+| **Frontend** | `React 18` + `React Router` | SPA with four pages, canvas overlay, WebSocket client |
+| **Build Tool** | `Vite` | Fast dev server and production bundler |
+| **Numerical** | `NumPy` | Image array manipulation |
+| **Audio** | Web Audio API | In-browser descending beep alert |
+| **Fonts** | Google Fonts | Cormorant Garamond · DM Sans |
+| **Runtime** | Python 3.8+ | Core backend application |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-face-mask-detection/
+maskoff/
+│
 ├── backend/
-│   ├── main.py              ← FastAPI server with detection endpoints
-│   ├── requirements.txt      ← Python dependencies
-│   └── best.pt              ← YOLOv8 trained model weights
+│   ├── main.py                     # FastAPI app — REST + WebSocket inference
+│   ├── best.pt                     # YOLOv8 trained model weights
+│   └── requirements.txt            # Python dependencies
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx          ← Main router component
-│   │   ├── App.css          ← Global styles (deprecated)
-│   │   ├── index.css        ← Master stylesheet with luxury theme
-│   │   ├── main.jsx         ← React entry point
+│   │   ├── App.jsx                 # Router shell with Navbar + page routes
+│   │   ├── main.jsx                # React DOM entry point
+│   │   ├── index.css               # Full HUD theme — colours, typography, layout
+│   │   ├── App.css                 # App-level overrides
+│   │   ├── logo.png                # Brand logo asset
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx   ← Navigation header with top-right buttons
-│   │   │   └── Footer.jsx   ← Site footer with legal links
+│   │   │   └── Navbar.jsx          # Fixed top nav with active-link highlighting
 │   │   └── pages/
-│   │       ├── Home.jsx              ← Landing page with gradient title
-│   │       ├── Detection.jsx         ← Live webcam detection
-│   │       ├── ImageUpload.jsx       ← Image analysis interface
-│   │       ├── VideoUpload.jsx       ← Video analysis interface
-│   │       ├── About.jsx             ← Project information
-│   │       ├── Contact.jsx           ← Team member profiles
-│   │       ├── PrivacyPolicy.jsx     ← Privacy policy details
-│   │       └── TermsOfService.jsx    ← Terms and conditions
-│   │
-│   ├── index.html           ← HTML template
-│   ├── package.json         ← NPM dependencies and scripts
-│   └── vite.config.js       ← Vite configuration
+│   │       ├── Home.jsx            # Landing page — hero, stats, features
+│   │       ├── Detection.jsx       # Live webcam stream + WebSocket detection
+│   │       ├── ImageUpload.jsx     # Upload image, run inference, download result
+│   │       └── About.jsx           # Model info, tech stack, usage notes
+│   ├── index.html                  # Vite HTML entry point
+│   ├── package.json                # Node dependencies
+│   └── vite.config.js              # Vite configuration
 │
-├── package.json             ← Root package configuration
-└── README.md                ← Project documentation
+└── README.md                       # This file
 ```
 
 ---
 
-## 🚀 Getting Started
+## ⚙️ Installation
 
 ### Prerequisites
-- **Node.js** 14+ with npm/yarn
-- **Python** 3.8+ with pip
-- **Git** for version control
 
-### Backend Setup
+- Python **3.8 or higher**
+- Node.js **16 or higher** + npm
+- A webcam (for live detection mode)
+- *(Optional)* NVIDIA GPU + CUDA for faster YOLOv8 inference
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/maskoff.git
+cd maskoff
+```
+
+### 2. Set Up the Backend
 
 ```bash
 cd backend
 
-# Create virtual environment
+# Create and activate a virtual environment
 python -m venv venv
 
-# Activate virtual environment
-# On macOS/Linux:
-source venv/bin/activate
-# On Windows:
+# Windows
 venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Ensure best.pt (YOLOv8 model) is in this directory
-# If not available, download from Ultralytics: https://github.com/ultralytics/yolov8
-
-# Start FastAPI server
-python main.py
-# Server running at http://localhost:8000
 ```
 
-### Frontend Setup
+**`requirements.txt`** should contain:
+
+```
+fastapi>=0.100.0
+uvicorn>=0.23.0
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+python-multipart>=0.0.6
+```
+
+### 3. Add Your Model Weights
+
+Place your trained `best.pt` file inside the `backend/` directory:
+
+```
+backend/
+└── best.pt   ← your trained YOLOv8 weights go here
+```
+
+Update the model path in `main.py` if needed:
+
+```python
+# main.py
+MODEL_PATH = "best.pt"   # relative to backend/ directory
+```
+
+### 4. Set Up the Frontend
 
 ```bash
-cd frontend
+cd ../frontend
 
-# Install npm dependencies
+# Install Node dependencies
 npm install
+```
 
-# Start Vite development server
+### 5. Run the App
+
+**Terminal 1 — Backend:**
+```bash
+cd backend
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd frontend
 npm run dev
-# Frontend running at http://localhost:5173
-
-# Build for production
-npm run build
 ```
 
----
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary Gold** — `#C9954C` (accent, highlights)
-- **Gold Light** — `#E8B86D` (hover states, borders)
-- **Dark Background** — `#111110` (main background)
-- **Muted Accents** — Various earth tones for UI elements
-
-### Animation Patterns
-- **Springy Transitions** — Cubic-bezier easing `(0.34, 1.56, 0.64, 1)` for interactive feel
-- **Ripple Effects** — Button click feedback with pseudo-element animations
-- **Hover States** — Scale 1.02x on hover, 0.98x on click
-- **Gradient Text** — Hero title with animated background clip effect
-
-### Typography
-- **Headers** — Bold, gradient-styled for emphasis
-- **Body Text** — Clean, readable sans-serif
-- **Labels** — Luxury aesthetic with subtle shadows
+The app will open at `http://localhost:5173`. The backend API runs at `http://localhost:8000`.
 
 ---
 
-## 📋 Detection Classes
+## 🚀 Usage
 
-The model detects and classifies faces into 4 categories:
+### Live Detection Mode
+1. Navigate to **Live** in the top navbar
+2. Click **Start stream**
+3. Point your webcam at faces with / without masks
+4. Watch bounding boxes and confidence scores update in real time
+5. Monitor the telemetry panel (FPS, latency, per-class counts) on the right
+6. Click **Stop stream** when done
 
-| Class | Description | Count |
-|-------|-------------|-------|
-| `masked` | Face with properly worn mask | Tracked |
-| `unmasked` | Face without mask | Tracked |
-| `improper` | Mask worn incorrectly | Tracked |
-| `veil` | Face covered with veil | Tracked |
+### Image Upload Mode
+1. Navigate to **Upload** in the top navbar
+2. Click the drop zone or **Choose image** to upload a `.jpg`, `.png`, `.webp`, or `.bmp` file
+3. Detection runs automatically — annotated result is shown inline
+4. View per-class counts and individual detection rows in the results panel
+5. Click **Download annotated image** to save the output
+6. Click **Clear** to reset
+
+### Navigation
+| Page | Path | Description |
+|------|------|-------------|
+| **Home** | `/` | Project overview, stats, and quick-launch links |
+| **Live** | `/detection` | Real-time webcam detection with WebSocket stream |
+| **Upload** | `/upload` | Single-image inference and annotated download |
+| **About** | `/about` | Detection classes, tech stack, and usage notes |
 
 ---
 
-## 🔌 API Endpoints
+## 🔍 How It Works
 
-### Backend Endpoints
+### Live Detection Pipeline
 
-| Method | Endpoint | Input | Output | Description |
-|--------|----------|-------|--------|-------------|
-| GET | `/` | — | JSON | Server info & available labels |
-| GET | `/health` | — | JSON | Health check, model status |
-| POST | `/detect/image` | Image file | JSON + Base64 | Analyze image, return annotated |
-| POST | `/detect/video` | Video file | JSON | Analyze video, return frame counts |
-| WS | `/ws/stream` | Binary frames | JSON | Real-time live camera detection |
+```
+Webcam frame
+    │
+    ▼
+Hidden <canvas> (320×240)
+    │  — drawImage() crops to canvas aspect ratio
+    │  — toDataURL("image/jpeg", 0.65) → base64 string
+    │
+    ▼
+WebSocket send  →  { frame: "<base64>", conf: 0.25 }
+    │
+    ▼
+FastAPI /ws/stream
+    │  — base64 decode → NumPy array
+    │  — YOLOv8 inference with conf threshold
+    │  — draw_boxes() adds fills + labels to frame
+    │  — re-encode to base64 JPEG
+    │
+    ▼
+WebSocket response  →  { detections, counts, total, latency_ms, frame_count }
+    │
+    ▼
+React onmessage handler
+    │  — latestDetsRef.current = detections
+    │  — requestAnimationFrame render loop draws boxes on display canvas
+    │  — alert logic checks labels → fires audio / banner
+    │  — immediately sends next frame (zero-queue loop)
+    ▼
+Display canvas overlay
+```
 
-### Response Format (Detection)
+### Image Upload Pipeline
 
-```json
-{
-  "detections": [
-    {
-      "class": "unmasked",
-      "confidence": 0.95,
-      "bbox": [x1, y1, x2, y2]
-    }
-  ],
-  "counts": {
-    "total": 5,
-    "masked": 2,
-    "unmasked": 2,
-    "improper": 1,
-    "veil": 0
-  },
-  "latency_ms": 120,
-  "annotated_image": "base64_string_here"
+```
+File input  →  FormData POST /detect/image
+    │
+    ▼
+FastAPI reads file bytes  →  NumPy decode
+    │  — YOLOv8 inference
+    │  — draw_boxes() annotation
+    │  — JPEG encode → base64
+    │
+    ▼
+JSON response  →  { detections, counts, total, latency_ms, annotated_image }
+    │
+    ▼
+React sets previewSrc = "data:image/jpeg;base64,..."
+```
+
+### Alert Logic (Key Design)
+
+Alert state is computed **fresh on every WebSocket message** from the raw detection list — never cached between frames. This ensures:
+
+- New detection → banner fires **immediately** on the same message
+- Detection clears → banner disappears **immediately** without waiting for a timeout
+- Audio beep is rate-limited to one per **1.5 seconds** using `lastAudioTimeRef`
+
+| Detected Label | Audio Beep | Visual Banner |
+|---------------|-----------|--------------|
+| `masked` | ✅ Yes | ✅ Yes |
+| `improper` | ✅ Yes | ✅ Yes |
+| `niqab` | ❌ No | ✅ Yes |
+| `unmasked` | ❌ No | ❌ No |
+
+---
+
+## 🔧 Configuration
+
+Key constants in `backend/main.py`:
+
+```python
+# Path to your trained model
+MODEL_PATH = "best.pt"
+
+# All detectable class names (must match model training order)
+CLASS_NAMES = ["masked", "unmasked", "improper", "niqab"]
+
+# Bounding box colours per class (BGR)
+BOX_COLORS = {
+    "masked":   (212, 175, 55),   # gold
+    "unmasked": (80,  80,  255),  # red-blue
+    "improper": (0,   140, 255),  # amber
+    "niqab":    (140, 120, 90),   # warm brown
 }
 ```
 
----
+Key constants in `frontend/src/pages/Detection.jsx`:
 
-## 🎯 Features
+```javascript
+const WS_BASE = "ws://localhost:8000";   // WebSocket server URL
 
-### Home Page
-- **Futuristic Title** — "MaskOff: Neural-Powered Vision Intelligence" with gradient effect
-- **Call-to-Action Buttons** — Quick links to detection features
-- **Project Description** — Overview of capabilities and technology
-
-### Live Detection (`/detection`)
-- **Real-time Webcam Stream** — WebSocket-based frame capture and analysis
-- **Detection Overlay** — Bounding boxes with class labels in real-time
-- **Statistics Dashboard** — Live counters for each detection class
-- **Latency Meter** — Displays inference time per frame
-- **Professional Layout** — 1400px max-width optimized viewport
-
-### Image Upload (`/upload`)
-- **Drag-and-Drop Interface** — Or click to select image file
-- **Instant Analysis** — Real-time detection processing
-- **Annotated Results** — Bounding boxes overlay on original image
-- **Detection Summary** — Total and per-class detection counts
-- **Base64 Display** — Annotated image shown inline
-
-### Video Upload (`/video`)
-- **Video File Support** — MP4, AVI, MOV, WebM formats
-- **Batch Processing** — Frame-by-frame video analysis
-- **Aggregated Statistics** — Total and per-class counts across all frames
-- **Performance Metrics** — Shows total frames processed and average latency
-- **Clean Results Display** — Summary view without individual frame listings
-
-### About Page (`/about`)
-- **Project Mission** — Vision and goals of MaskOff
-- **Technology Stack** — Complete list of frameworks and libraries
-- **Model Details** — YOLOv8 architecture and training info
-- **Use Cases** — Real-world applications
-
-### Contact Page (`/contact`)
-- **Team Member Profiles** — Roles and contact information
-- **Professional Team Grid** — Vasundhara Yande, Abdul Rehman Khatib, Saad Syed
-- **Email Links** — Direct contact to team members
-- **No Scrolling Required** — Fits single viewport
-
-### Legal Pages
-- **Privacy Policy** (`/privacy`) — Data collection, processing, user rights (condensed)
-- **Terms of Service** (`/terms`) — Usage agreements, liability, detection tool disclaimer (condensed)
-- **Both pages fit single viewport** without scrolling
-
-### Navigation & Footer
-- **Top Navigation** — Navbar with logo and right-aligned navigation links
-- **Responsive Menu** — Links: Home, Live Detection, Image, Video, About
-- **Footer** — Copyright, links to Privacy Policy, Terms, and Contact
-- **Professional Layout** — Consistent styling across all pages
-
----
-
-## 🎬 Interactive Effects
-
-- **Button Hover Effects** — Scale and brightness animations
-- **Ripple Animation** — Click feedback on all buttons
-- **Springy Transitions** — Smooth, engaging interactions
-- **Title Glow** — Hero title with drop-shadow effects
-- **Team Card Lift** — Hover animation lifts cards up 8px
-- **Navbar Enhancement** — Backdrop blur and fixed positioning
-
----
-
-## 🔒 Privacy & Compliance
-
-- **Local Processing** — All image/video data stays on-device (configurable)
-- **No Data Storage** — Images and videos not permanently stored
-- **HTTPS Ready** — TLS/SSL encryption for data in transit
-- **Privacy Policy** — Clear disclosure of data handling
-- **Terms of Service** — Explicit liability disclaimers for detection tool
-
----
-
-## 🛠️ Customization
-
-### Change Color Scheme
-Edit CSS variables in `frontend/src/index.css`:
-```css
-:root {
-  --gold: #C9954C;
-  --gold-light: #E8B86D;
-  --dark-bg: #111110;
-}
+const LABELS = {
+  masked:   { color: "#d97a4f", label: "MASKED" },
+  unmasked: { color: "#7f9b73", label: "UNMASKED" },
+  improper: { color: "#cc9f47", label: "IMPROPER" },
+  niqab:    { color: "#9c7a5b", label: "NIQAB" },
+};
 ```
 
-### Update Team Members
-Edit `TEAM_MEMBERS` array in `frontend/src/pages/Contact.jsx`
+Key constants in `frontend/src/pages/ImageUpload.jsx`:
 
-### Modify Detection Classes
-Update model class names in `backend/main.py` and frontend components
-
-### Adjust Layout Widths
-Search for `max-width` in `frontend/src/index.css` and modify pixel values
+```javascript
+const API_BASE = "http://localhost:8000";  // REST API base URL
+```
 
 ---
 
-## 📊 Performance Metrics
+## ⚠️ Known Limitations
 
-- **Image Detection** — ~100-200ms per image (depends on model size)
-- **Video Processing** — ~30-60ms per frame on modern hardware
-- **Live Streaming** — ~10-15 FPS over WebSocket
-- **Frontend Bundle** — ~150-200KB gzipped
-- **Page Load Time** — <2 seconds on 4G connection
-
----
-
-## 🤝 Team
-
-- **Vasundhara Yande** — Dataset & Model Preparation Specialist
-- **Abdul Rehman Khatib** — ML Model Architect & Validation Engineer
-- **Saad Syed** — Full-Stack Platform Engineer
+| Limitation | Details |
+|-----------|---------|
+| **Synchronous webcam loop** | Frame sending is driven by `requestAnimationFrame` — effective FPS depends on backend inference speed and network latency |
+| **Local-only deployment** | `WS_BASE` and `API_BASE` are hardcoded to `localhost` — update for remote or Docker deployment |
+| **No authentication** | The WebSocket and REST endpoints have no access control — add middleware before public deployment |
+| **No event logging** | Detections are not persisted to disk; all state resets on page refresh |
+| **Single camera only** | One webcam stream per browser session; no multi-feed support |
+| **Windows model path** | `MODEL_PATH` may need adjusting for macOS / Linux environments |
 
 ---
 
-## 📝 License
+## 🗺️ Future Roadmap
 
-This project is provided as-is for educational and commercial purposes. See [Terms of Service](/terms) for usage restrictions.
-
----
-
-## 🚀 Future Enhancements
-
-- Mobile app version (React Native)
-- Multi-model support for different detection tasks
-- Advanced analytics dashboard
-- Export detection reports (PDF/CSV)
-- Integration with security systems and APIs
-- Edge deployment (Docker containerization)
-- Performance optimization for lower-end devices
-- Multi-language support
+- [ ] **Multi-camera support** — simultaneous feeds from multiple entry points
+- [ ] **Detection event log** — timestamped CSV / JSON export of all detections and alert events
+- [ ] **User authentication** — role-based access for operators vs. admins
+- [ ] **Docker deployment** — containerised full-stack build for production use
+- [ ] **Expanded model** — hard hat detection, vest detection, additional PPE classes
+- [ ] **Mobile companion app** — use phone camera as a remote stream source
+- [ ] **Night mode / low-light preprocessing** — CLAHE enhancement for poor visibility
+- [ ] **Dashboard analytics** — daily detection trends, class distribution charts, heatmaps
 
 ---
 
-## ❓ Support
+## 📄 License
 
-For questions, issues, or feedback, please contact the team through the [Contact Page](/contact) or email support directly.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
-**Happy detecting! 🎯**
+---
+
+<div align="center">
+
+**Built with ❤️ using YOLOv8 + FastAPI + React**
+
+*MaskOff · Mask Detection Console · v1.0*
+
+</div>
