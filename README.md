@@ -1,26 +1,47 @@
 <div align="center">
 
-```
+<pre>
 ███╗   ███╗ █████╗ ███████╗██╗  ██╗ ██████╗ ███████╗███████╗
 ████╗ ████║██╔══██╗██╔════╝██║ ██╔╝██╔═══██╗██╔════╝██╔════╝
 ██╔████╔██║███████║███████╗█████╔╝ ██║   ██║█████╗  █████╗  
 ██║╚██╔╝██║██╔══██║╚════██║██╔═██╗ ██║   ██║██╔══╝  ██╔══╝  
 ██║ ╚═╝ ██║██║  ██║███████║██║  ██╗╚██████╔╝██║     ██║     
 ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝    
-```
-
-**Real-Time Face Mask Detection & Security Alert System**
-
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=pytorch&logoColor=white)](https://ultralytics.com)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
-[![License](https://img.shields.io/badge/License-MIT-00D4AA?style=for-the-badge)](LICENSE)
+</pre>
 
 <br/>
 
-> *A dark, luxury HUD-style dashboard that detects mask states in real time — so checkpoints stay smart.*
+<b>Real-Time Face Mask Detection & Security Alert System</b>
+
+<br/><br/>
+
+<a href="https://python.org">
+<img src="https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+</a>
+
+<a href="https://ultralytics.com">
+<img src="https://img.shields.io/badge/YOLOv8-Ultralytics-FF6B35?style=for-the-badge&logo=pytorch&logoColor=white" />
+</a>
+
+<a href="https://react.dev">
+<img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+</a>
+
+<a href="https://fastapi.tiangolo.com">
+<img src="https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+</a>
+
+<a href="https://opencv.org">
+<img src="https://img.shields.io/badge/OpenCV-4.x-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white" />
+</a>
+
+<a href="LICENSE">
+<img src="https://img.shields.io/badge/License-MIT-00D4AA?style=for-the-badge" />
+</a>
+
+<br/><br/>
+
+<i>A dark, luxury HUD-style dashboard that detects mask states in real time — so checkpoints stay smart.</i>
 
 <br/>
 
